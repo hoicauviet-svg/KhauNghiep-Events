@@ -3,10 +3,18 @@
   "rules": {
     "player": "Thích Khẩu Nghiệp ngồi farm công đức, không đứng, không đi lại trừ khi có bước dung_day hoặc bo_chay.",
     "fixedStages": 5,
-    "afterFixed": "Từ màn 6 trở đi bốc ngẫu nhiên eventsPerRandomStage sự kiện từ randomPool, không lặp trong cùng một màn.",
-    "eventsPerRandomStage": 4,
+    "afterFixed": "Từ màn 6 trở đi bốc ngẫu nhiên từ randomPool, không lặp trong cả lượt chơi. randomStageEvents là số tình huống của từng màn random, hết danh sách thì dùng số cuối. Bản app cũ chỉ đọc eventsPerRandomStage.",
+    "eventsPerRandomStage": 6,
     "points": "Mỗi lựa chọn cộng cả hai thanh. merit 1 đến 6, karma 5 đến 45. Không có số âm.",
-    "steps": "Danh sách động tác chạy lần lượt. Mảng rỗng thì lựa chọn chỉ có lời thoại."
+    "steps": "Danh sách động tác chạy lần lượt. Mảng rỗng thì lựa chọn chỉ có lời thoại.",
+    "randomStageEvents": [
+      6,
+      6,
+      7,
+      7,
+      8
+    ],
+    "stageSize": "Màn cố định càng về sau càng nhiều tình huống: 4, 4, 5, 5, 6."
   },
   "characters": [
     {
@@ -92,6 +100,20 @@
       "shape": "person",
       "color": "#E57F3B",
       "tag": "BÓNG"
+    },
+    {
+      "id": "anh_grab",
+      "name": "Anh Grab",
+      "shape": "person",
+      "color": "#2DB34A",
+      "tag": "ĐÓN NHẦM"
+    },
+    {
+      "id": "chi_online",
+      "name": "Chị Bán Online",
+      "shape": "person",
+      "color": "#D94C8A",
+      "tag": "CHỐT ĐƠN"
     }
   ],
   "actions": [
@@ -859,6 +881,59 @@
               "thought": "Có điện lại rồi nó vẫn chưa về."
             }
           ]
+        },
+        {
+          "title": "BÉ TRỨNG SOI ĐÈN PIN",
+          "actor": "be_trung",
+          "prompt": "Bé rọi đèn pin thẳng vào mặt sư: Ma có đầu trọc không? Hay sư là ma?",
+          "choices": [
+            {
+              "text": "Niệm cho bé yên tâm",
+              "steps": [
+                {
+                  "who": "monk",
+                  "do": "niem_kinh"
+                }
+              ],
+              "merit": 5,
+              "karma": 5,
+              "reply": "Ma mà cũng biết niệm à? Ghê thế.",
+              "verdict": "Bị chiếu đèn vẫn giữ tâm. Mắt thì không giữ được.",
+              "thought": "Mắt còn thấy đom đóm."
+            },
+            {
+              "text": "Giật đèn soi lại",
+              "steps": [
+                {
+                  "who": "monk",
+                  "do": "gian_do"
+                }
+              ],
+              "merit": 3,
+              "karma": 20,
+              "reply": "Á! Ma cướp đèn! Mẹ ơiii!",
+              "verdict": "Cướp đèn trẻ con trong lúc cúp điện!",
+              "thought": "Đèn hết pin. Cướp cũng vô ích."
+            },
+            {
+              "text": "Làm mặt ma hù",
+              "steps": [
+                {
+                  "who": "monk",
+                  "do": "dung_day"
+                },
+                {
+                  "who": "actor",
+                  "do": "chay_mat"
+                }
+              ],
+              "merit": 1,
+              "karma": 35,
+              "reply": "Bé chạy mất dép, vừa chạy vừa khóc.",
+              "verdict": "Dọa trẻ con trong đêm. Tu thành ma thật!",
+              "thought": "Mai mẹ nó lên chùa. Mang theo dép."
+            }
+          ]
         }
       ]
     },
@@ -1050,6 +1125,59 @@
               "reply": "Ối! Chú đang đứng trên thang mà!",
               "verdict": "Rút điện người đang đứng trên cao!",
               "thought": "Thang đổ. Điện vẫn còn."
+            }
+          ]
+        },
+        {
+          "title": "CÔ HÀNG XÔI MỜI NẾM",
+          "actor": "co_hang_xoi",
+          "prompt": "Sư nếm thử miếng xôi mặn này. Có tí lạp xưởng thôi, coi như rau.",
+          "choices": [
+            {
+              "text": "Từ chối lễ phép",
+              "steps": [
+                {
+                  "who": "monk",
+                  "do": "niem_kinh"
+                }
+              ],
+              "merit": 6,
+              "karma": 5,
+              "reply": "Thôi để cô ăn. Tu khổ thế.",
+              "verdict": "Thắng được miếng lạp xưởng. Công đức thơm phức!",
+              "thought": "Mùi lạp xưởng vẫn còn trong mũi."
+            },
+            {
+              "text": "Nếm một hạt xôi thôi",
+              "steps": [
+                {
+                  "who": "monk",
+                  "do": "nem_do_an"
+                }
+              ],
+              "merit": 3,
+              "karma": 15,
+              "reply": "Một hạt mà sư nhai mười phút.",
+              "verdict": "Lách luật từng hạt gạo. Khôn vặt!",
+              "thought": "Hạt xôi có dính mỡ. Chắc không tính."
+            },
+            {
+              "text": "Bê luôn cả mẹt",
+              "steps": [
+                {
+                  "who": "monk",
+                  "do": "gian_do"
+                },
+                {
+                  "who": "actor",
+                  "do": "nhay"
+                }
+              ],
+              "merit": 1,
+              "karma": 40,
+              "reply": "Ơ kìa! Hai mươi nghìn sư ơi!",
+              "verdict": "Xơi cả mẹt xôi mặn. Giới luật xuống bụng!",
+              "thought": "No rồi mới nhớ mình đang tu."
             }
           ]
         }
@@ -1272,6 +1400,128 @@
               "reply": "Em chưa thua mà!",
               "verdict": "Xuống tóc cưỡng chế! Chùa không nhận kiểu này!",
               "thought": "Đầu nó giờ bóng hơn đầu mình."
+            }
+          ]
+        },
+        {
+          "title": "ÔNG SAY HÁT TÌNH CA",
+          "actor": "ong_say",
+          "prompt": "Ông cầm loa kẹo kéo, ghé sát tai sư: Bài này tặng sư. Em ơi đừng khóc...",
+          "choices": [
+            {
+              "text": "Ngồi nghe cho hết",
+              "steps": [
+                {
+                  "who": "monk",
+                  "do": "ngoi_xuong"
+                }
+              ],
+              "merit": 5,
+              "karma": 5,
+              "reply": "Hát xong ông khóc, sư phải dỗ.",
+              "verdict": "Nhẫn nhục qua ba điệp khúc. Đáng nể!",
+              "thought": "Tai trái điếc tạm. Tai phải nghe tiếp."
+            },
+            {
+              "text": "Song ca cho ông vui",
+              "steps": [
+                {
+                  "who": "monk",
+                  "do": "niem_kinh"
+                },
+                {
+                  "who": "actor",
+                  "do": "nhay"
+                }
+              ],
+              "merit": 3,
+              "karma": 20,
+              "reply": "Sư hát lệch tông mà hay phết!",
+              "verdict": "Sư lên đồ karaoke ngày rằm!",
+              "thought": "Điểm karaoke tám chín. Điểm tu không ai chấm."
+            },
+            {
+              "text": "Rút dây loa",
+              "steps": [
+                {
+                  "who": "monk",
+                  "do": "dung_day"
+                },
+                {
+                  "who": "actor",
+                  "do": "nga"
+                }
+              ],
+              "merit": 1,
+              "karma": 35,
+              "reply": "Ông ngã ra ôm loa ngủ luôn.",
+              "verdict": "Rút dây loa người say. Nghiệp có âm thanh vòm!",
+              "thought": "Yên rồi. Mà ông ngủ trên bồ đoàn."
+            }
+          ]
+        },
+        {
+          "title": "ĐẠT KHÔNG CHÍN ĐỐT PHÁO",
+          "actor": "dat_khong_chin",
+          "prompt": "Em đốt pháo mừng rằm. Mà quên mất cầm ngược. Sư né giúp em!",
+          "choices": [
+            {
+              "text": "Ngồi im niệm",
+              "steps": [
+                {
+                  "who": "monk",
+                  "do": "niem_kinh"
+                },
+                {
+                  "who": "actor",
+                  "do": "cau_dien"
+                }
+              ],
+              "merit": 5,
+              "karma": 10,
+              "reply": "Pháo xịt. Em thất vọng ghê.",
+              "verdict": "Bình thản trước pháo xịt. Phước lớn!",
+              "thought": "Cũng may pháo hàng giả."
+            },
+            {
+              "text": "Ôm đầu chạy",
+              "steps": [
+                {
+                  "who": "monk",
+                  "do": "che_dau"
+                },
+                {
+                  "who": "monk",
+                  "do": "bo_chay"
+                }
+              ],
+              "merit": 2,
+              "karma": 20,
+              "reply": "Sư chạy nhanh hơn pháo luôn!",
+              "verdict": "Bỏ bồ đoàn chạy pháo. Định lực bằng không!",
+              "thought": "Chạy xong mới nhớ pháo chưa nổ."
+            },
+            {
+              "text": "Phang cho một gậy",
+              "steps": [
+                {
+                  "who": "monk",
+                  "do": "cam_gay"
+                },
+                {
+                  "who": "monk",
+                  "do": "dap"
+                },
+                {
+                  "who": "actor",
+                  "do": "chay_mat"
+                }
+              ],
+              "merit": 1,
+              "karma": 40,
+              "reply": "Pháo nổ trên gậy, gậy cháy đen.",
+              "verdict": "Đánh người đốt pháo bằng gậy thiền!",
+              "thought": "Gậy mất. Mai lấy gì phang chó."
             }
           ]
         }
@@ -2273,6 +2523,766 @@
           "reply": "Thiếu một sao là em mất thưởng tuần sư ơi!",
           "verdict": "Chấm điểm khắt khe với người lao động!",
           "thought": "Sao thứ năm để dành cho kiếp sau."
+        }
+      ]
+    },
+    {
+      "title": "GRAB ĐÓN NHẦM SƯ",
+      "actor": "anh_grab",
+      "prompt": "Anh ơi điểm đón ghi chùa. Khách tên Tèo, có phải anh không?",
+      "choices": [
+        {
+          "text": "Niệm cho nó đi",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "niem_kinh"
+            },
+            {
+              "who": "actor",
+              "do": "chay_mat"
+            }
+          ],
+          "merit": 5,
+          "karma": 8,
+          "reply": "Thôi em huỷ cuốc!",
+          "verdict": "Đuổi khách bằng kinh, vẫn còn lịch sự.",
+          "thought": "Huỷ cuốc mà không trừ điểm thầy."
+        },
+        {
+          "text": "Lên xe luôn",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "dung_day"
+            }
+          ],
+          "merit": 2,
+          "karma": 20,
+          "reply": "Ủa thầy đi đâu? Khách em ở bãi xe mà!",
+          "verdict": "Bỏ chùa đi xe ôm công nghệ giữa giờ farm!",
+          "thought": "Tèo hay không thì cũng năm sao."
+        },
+        {
+          "text": "Phang cho một gậy",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "cam_gay"
+            },
+            {
+              "who": "monk",
+              "do": "dap"
+            },
+            {
+              "who": "actor",
+              "do": "nga"
+            }
+          ],
+          "merit": 1,
+          "karma": 40,
+          "reply": "Một sao! Một sao!",
+          "verdict": "Đánh tài xế. Bị chấm một sao cả chùa!",
+          "thought": "Một sao mà công đức vẫn lên."
+        }
+      ]
+    },
+    {
+      "title": "CHỊ ONLINE CHỐT ĐƠN",
+      "actor": "chi_online",
+      "prompt": "Live đây cả nhà ơi! Nhang thơm vị trà sữa, sư đang dùng thử nè. Sư cười cái coi!",
+      "choices": [
+        {
+          "text": "Quay lưng lại camera",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "quay_lung"
+            }
+          ],
+          "merit": 5,
+          "karma": 8,
+          "reply": "Ơ sư quay lưng là hết view rồi!",
+          "verdict": "Từ chối làm KOL. Tâm không lên sóng.",
+          "thought": "Lưng trọc cũng có người thả tim."
+        },
+        {
+          "text": "Cười một cái",
+          "steps": [
+            {
+              "who": "actor",
+              "do": "livestream"
+            }
+          ],
+          "merit": 2,
+          "karma": 20,
+          "reply": "Chốt đơn! Ba trăm đơn nhờ nụ cười sư!",
+          "verdict": "Bán nụ cười lấy hoa hồng nhang!",
+          "thought": "Không được chia phần trăm."
+        },
+        {
+          "text": "Chửi lên sóng",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "chui"
+            },
+            {
+              "who": "actor",
+              "do": "livestream"
+            }
+          ],
+          "merit": 1,
+          "karma": 40,
+          "reply": "Clip sư chửi lên xu hướng rồi!",
+          "verdict": "Chửi trên live. Khẩu nghiệp phát sóng toàn quốc!",
+          "thought": "Triệu view. Triệu nghiệp."
+        }
+      ]
+    },
+    {
+      "title": "BẢO HIỂM CHO CHÓ",
+      "actor": "anh_bao_hiem",
+      "prompt": "Con chó chùa hay bị phang. Sư mua gói bảo hiểm gậy cho nó, mỗi tháng có năm chục.",
+      "choices": [
+        {
+          "text": "Từ chối nhẹ nhàng",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "niem_kinh"
+            }
+          ],
+          "merit": 5,
+          "karma": 8,
+          "reply": "Thế để em bán cho con chim.",
+          "verdict": "Không mua bảo hiểm cho nghiệp. Sáng suốt!",
+          "thought": "Chó chưa bị phang hôm nay. Chưa."
+        },
+        {
+          "text": "Hỏi gói cho sư",
+          "steps": [],
+          "merit": 3,
+          "karma": 15,
+          "reply": "Gói cho sư bao cả kiếp sau, giá hơi cao.",
+          "verdict": "Tu mà mua bảo hiểm kiếp sau. Không tin nhân quả!",
+          "thought": "Kiếp sau trả góp được không nhỉ."
+        },
+        {
+          "text": "Phang thử xem có đền không",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "cam_gay"
+            },
+            {
+              "who": "monk",
+              "do": "dap"
+            },
+            {
+              "who": "actor",
+              "do": "chay_mat"
+            }
+          ],
+          "merit": 1,
+          "karma": 40,
+          "reply": "Bảo hiểm không chi trả gậy của sư!",
+          "verdict": "Thử bảo hiểm trên người bán bảo hiểm!",
+          "thought": "Đền thì không. Nghiệp thì có."
+        }
+      ]
+    },
+    {
+      "title": "BÉ TRỨNG SÚT BÓNG VÀO MÕ",
+      "actor": "be_trung",
+      "prompt": "Bé sút bóng trúng cái mõ, cốc một tiếng: Vàooo! Sư làm thủ môn tiếp nhé!",
+      "choices": [
+        {
+          "text": "Trả bóng cho bé",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "nem_do_an"
+            }
+          ],
+          "merit": 5,
+          "karma": 5,
+          "reply": "Sư ném yếu thế! Ném lại!",
+          "verdict": "Trả bóng tử tế. Tâm như thủ môn hiền.",
+          "thought": "Cái mõ móp một góc."
+        },
+        {
+          "text": "Bắt bóng ngồi đè",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "gian_do"
+            },
+            {
+              "who": "monk",
+              "do": "ngoi_xuong"
+            }
+          ],
+          "merit": 3,
+          "karma": 20,
+          "reply": "Sư ăn gian! Trả bóng đây!",
+          "verdict": "Tịch thu bóng trẻ con làm gối thiền!",
+          "thought": "Ngồi bóng êm hơn bồ đoàn."
+        },
+        {
+          "text": "Sút ra đường luôn",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "dung_day"
+            },
+            {
+              "who": "actor",
+              "do": "chay_mat"
+            }
+          ],
+          "merit": 1,
+          "karma": 35,
+          "reply": "Bé chạy theo bóng, vừa chạy vừa mách mẹ.",
+          "verdict": "Sút bóng trẻ con ra đường. Nghiệp có đà!",
+          "thought": "Sút hay phết. Tiếc là không ai xem."
+        }
+      ]
+    },
+    {
+      "title": "CHÓ GẶM DÉP SƯ",
+      "actor": "cho",
+      "prompt": "Con chó ngậm chiếc dép tổ ong của sư, vẫy đuôi đứng xa xa.",
+      "choices": [
+        {
+          "text": "Mặc kệ, đi chân đất",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "niem_kinh"
+            }
+          ],
+          "merit": 6,
+          "karma": 5,
+          "reply": "Gâu! Chó thất vọng vì không ai đuổi.",
+          "verdict": "Buông bỏ đôi dép. Giác ngộ chân trần!",
+          "thought": "Đất sân chùa nóng thật."
+        },
+        {
+          "text": "Ném dép còn lại đổi",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "nem_do_an"
+            },
+            {
+              "who": "actor",
+              "do": "cuop_do"
+            }
+          ],
+          "merit": 3,
+          "karma": 15,
+          "reply": "Chó ngậm luôn cả đôi chạy mất.",
+          "verdict": "Đổi một dép lấy không dép. Kinh tế học nhà chùa!",
+          "thought": "Giờ thì đều chân."
+        },
+        {
+          "text": "Rượt chó đòi dép",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "bo_chay"
+            },
+            {
+              "who": "monk",
+              "do": "chui"
+            }
+          ],
+          "merit": 1,
+          "karma": 35,
+          "reply": "Gâu gâu! Chó vui quá chạy ba vòng sân.",
+          "verdict": "Rượt chó vì đôi dép. Chấp dép!",
+          "thought": "Dép về. Tâm thì chưa."
+        }
+      ]
+    },
+    {
+      "title": "CHIM LÀM TỔ TRÊN ĐẦU",
+      "actor": "chim",
+      "prompt": "Con chim tha cành khô thả lên đầu trọc, có vẻ tính xây nhà.",
+      "choices": [
+        {
+          "text": "Ngồi im cho chim xây",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "ngoi_xuong"
+            }
+          ],
+          "merit": 6,
+          "karma": 5,
+          "reply": "Chíp! Nhà đẹp, view sân chùa.",
+          "verdict": "Lấy đầu làm nhà cho chúng sinh. Đại từ bi!",
+          "thought": "Đầu nặng thêm ba cành củi."
+        },
+        {
+          "text": "Lắc đầu cho rơi",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "che_dau"
+            },
+            {
+              "who": "actor",
+              "do": "ia"
+            }
+          ],
+          "merit": 3,
+          "karma": 15,
+          "reply": "Chim giận, để lại một bãi tiền nhà.",
+          "verdict": "Đuổi chim, nhận bãi phạt!",
+          "thought": "Nhà không thành. Phân thì thành."
+        },
+        {
+          "text": "Phang lên trời",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "cam_gay"
+            },
+            {
+              "who": "monk",
+              "do": "dap"
+            },
+            {
+              "who": "actor",
+              "do": "chay_mat"
+            }
+          ],
+          "merit": 1,
+          "karma": 40,
+          "reply": "Chíp chíp! Chim bay mất, cành rơi đầy đầu.",
+          "verdict": "Vung gậy đuổi chim làm tổ. Phá nhà người ta!",
+          "thought": "Tổ không còn. Cành vẫn trên đầu."
+        }
+      ]
+    },
+    {
+      "title": "HIẾU HOA HÒE REVIEW SƯ",
+      "actor": "hieu_hoa_hoe",
+      "prompt": "Hello cả nhà, hôm nay em review sư thật ở chùa. Sư chấm điểm áo hoa của em đi!",
+      "choices": [
+        {
+          "text": "Khen áo đẹp",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "niem_kinh"
+            }
+          ],
+          "merit": 5,
+          "karma": 8,
+          "reply": "Sư chấm mười điểm cả nhà ơi!",
+          "verdict": "Khen áo hoa để được yên. Khéo mồm!",
+          "thought": "Áo đó mặc đi đám ma cũng nổi."
+        },
+        {
+          "text": "Chấm hai điểm",
+          "steps": [
+            {
+              "who": "actor",
+              "do": "livestream"
+            }
+          ],
+          "merit": 3,
+          "karma": 20,
+          "reply": "Hai điểm thôi á? Em block sư!",
+          "verdict": "Chấm điểm thẳng mặt trên live!",
+          "thought": "Sự thật mất lòng. Mất luôn follow."
+        },
+        {
+          "text": "Lấy áo lau gậy",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "gian_do"
+            },
+            {
+              "who": "monk",
+              "do": "cam_gay"
+            }
+          ],
+          "merit": 1,
+          "karma": 35,
+          "reply": "Áo hàng hiệu của em đó sư!",
+          "verdict": "Dùng áo hoa lau gậy. Khinh thời trang!",
+          "thought": "Gậy sạch bóng. Hoa hòe hết hòe."
+        }
+      ]
+    },
+    {
+      "title": "ĐẠT PHÍT NHỜ ĐẾM HÍT ĐẤT",
+      "actor": "dat_phit",
+      "prompt": "Sư đếm giúp em một trăm cái hít đất. Đếm sai em làm lại từ đầu, ngồi đó đến tối nhé.",
+      "choices": [
+        {
+          "text": "Đếm bằng chuỗi hạt",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "niem_kinh"
+            }
+          ],
+          "merit": 5,
+          "karma": 8,
+          "reply": "Đếm chuẩn ghê. Một trăm lẻ tám cái luôn!",
+          "verdict": "Lấy chuỗi hạt đếm hít đất. Đa năng!",
+          "thought": "Lỡ dư tám cái. Coi như công đức."
+        },
+        {
+          "text": "Đếm nhảy cóc",
+          "steps": [
+            {
+              "who": "actor",
+              "do": "nhay"
+            }
+          ],
+          "merit": 2,
+          "karma": 20,
+          "reply": "Sao mới hai mươi đã một trăm rồi sư?",
+          "verdict": "Gian lận đếm số. Thầy dạy toán khóc!",
+          "thought": "Nó tập ít. Mình tu nhiều."
+        },
+        {
+          "text": "Ngồi lên lưng nó",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "dung_day"
+            },
+            {
+              "who": "actor",
+              "do": "nga"
+            }
+          ],
+          "merit": 1,
+          "karma": 35,
+          "reply": "Á! Lưng em! Sư nặng hơn tạ!",
+          "verdict": "Ngồi đè người tập. Tạ có nghiệp!",
+          "thought": "Ăn chay mà vẫn nặng."
+        }
+      ]
+    },
+    {
+      "title": "THỢ ĐIỆN LẮP CAMERA",
+      "actor": "chu_tho_dien",
+      "prompt": "Chùa lắp camera chống trộm. Chú gắn ngay trên đầu sư cho rõ mặt, dây hơi hở tí.",
+      "choices": [
+        {
+          "text": "Ngồi im cho lắp",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "ngoi_xuong"
+            },
+            {
+              "who": "actor",
+              "do": "cau_dien"
+            }
+          ],
+          "merit": 5,
+          "karma": 8,
+          "reply": "Xong! Giờ sư lên hình hai tư trên hai tư.",
+          "verdict": "Chấp nhận bị soi cả ngày. Tâm trong suốt!",
+          "thought": "Ngáp cũng bị ghi lại."
+        },
+        {
+          "text": "Xoay camera đi chỗ khác",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "dung_day"
+            }
+          ],
+          "merit": 3,
+          "karma": 15,
+          "reply": "Ơ giờ nó quay vào nhà vệ sinh rồi!",
+          "verdict": "Xoay camera sai chỗ. Nghiệp ống kính!",
+          "thought": "Mai có biên bản."
+        },
+        {
+          "text": "Cắt dây cho nhanh",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "gian_do"
+            },
+            {
+              "who": "actor",
+              "do": "cau_dien"
+            }
+          ],
+          "merit": 1,
+          "karma": 40,
+          "reply": "Tạch! Cả xóm mất điện!",
+          "verdict": "Cắt dây điện cả xóm vì sợ lên hình!",
+          "thought": "Không ai thấy. Cả xóm biết."
+        }
+      ]
+    },
+    {
+      "title": "SHIPPER GIAO GÀ RÁN",
+      "actor": "shipper",
+      "prompt": "Đơn gà rán hai mươi miếng, người nhận ghi: Thích Khẩu Nghiệp. Sư nhận hàng giúp em!",
+      "choices": [
+        {
+          "text": "Bảo không phải của sư",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "niem_kinh"
+            }
+          ],
+          "merit": 6,
+          "karma": 5,
+          "reply": "Thế ai đặt dưới tên sư thế nhỉ?",
+          "verdict": "Từ chối gà rán. Thánh nhân!",
+          "thought": "Hai mươi miếng. Thánh nhân cũng phải nuốt nước bọt."
+        },
+        {
+          "text": "Nhận rồi cúng Phật",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "nem_do_an"
+            }
+          ],
+          "merit": 3,
+          "karma": 15,
+          "reply": "Cúng xong ai ăn sư?",
+          "verdict": "Cúng gà rán. Phật cũng bất ngờ!",
+          "thought": "Phật không ăn. Chó chùa ăn."
+        },
+        {
+          "text": "Nhận và ăn liền",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "gian_do"
+            },
+            {
+              "who": "monk",
+              "do": "nem_do_an"
+            }
+          ],
+          "merit": 1,
+          "karma": 45,
+          "reply": "Sư thanh toán ba trăm hai nhé!",
+          "verdict": "Tu chay ăn gà rán hai mươi miếng!",
+          "thought": "Ngon. Mà nghiệp cũng giòn."
+        }
+      ]
+    },
+    {
+      "title": "BÀ VÉ SỐ ĐÒI CHIA THƯỞNG",
+      "actor": "ba_ve_so",
+      "prompt": "Vé hôm qua sư mua trúng năm chục. Bà đòi chia đôi vì bà bán vé linh.",
+      "choices": [
+        {
+          "text": "Đưa hết cho bà",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "nem_do_an"
+            }
+          ],
+          "merit": 6,
+          "karma": 5,
+          "reply": "Sư tốt quá. Mai bà bán vé xịt cho người khác.",
+          "verdict": "Buông năm chục nghìn. Tâm nhẹ ví nhẹ!",
+          "thought": "Năm chục mua được ba gói mì."
+        },
+        {
+          "text": "Chia đôi",
+          "steps": [],
+          "merit": 3,
+          "karma": 15,
+          "reply": "Hai lăm nghìn mà sư đếm hai lần.",
+          "verdict": "Mặc cả tiền trúng số trong chùa!",
+          "thought": "Hai lăm cũng là tiền."
+        },
+        {
+          "text": "Bảo vé trúng là nhờ Phật",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "chui"
+            },
+            {
+              "who": "actor",
+              "do": "chay_mat"
+            }
+          ],
+          "merit": 1,
+          "karma": 35,
+          "reply": "Phật trúng thì Phật trả bà à?",
+          "verdict": "Mượn Phật giữ tiền vé số. Tham lam có nhân!",
+          "thought": "Bà đi rồi. Phật vẫn chưa nhận tiền."
+        }
+      ]
+    },
+    {
+      "title": "ÔNG SAY ĐÒI KẾT NGHĨA",
+      "actor": "ong_say",
+      "prompt": "Ông ôm cổ sư: Từ nay sư là em kết nghĩa của anh. Uống ly này làm chứng!",
+      "choices": [
+        {
+          "text": "Mời ông uống nước lọc",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "niem_kinh"
+            }
+          ],
+          "merit": 5,
+          "karma": 8,
+          "reply": "Rượu gì nhạt thế này? Mà thôi kết nghĩa vẫn được.",
+          "verdict": "Đổi rượu thành nước. Phép thuật nhà chùa!",
+          "thought": "Có thêm ông anh say."
+        },
+        {
+          "text": "Cụng ly cho ông vui",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "nem_do_an"
+            }
+          ],
+          "merit": 2,
+          "karma": 25,
+          "reply": "Dzô! Em anh tửu lượng tốt!",
+          "verdict": "Cụng ly ngay trên bồ đoàn!",
+          "thought": "Một ly thôi. Kinh quay hai vòng."
+        },
+        {
+          "text": "Gạt tay hất ly",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "gian_do"
+            },
+            {
+              "who": "actor",
+              "do": "nga"
+            }
+          ],
+          "merit": 1,
+          "karma": 35,
+          "reply": "Ông ngã ra, miệng vẫn gọi em ơi.",
+          "verdict": "Hất ly rượu người say. Nghiệp ướt sũng!",
+          "thought": "Đất uống hết rồi. Chắc đất say."
+        }
+      ]
+    },
+    {
+      "title": "CÔ HÀNG XÔI MAI MỐI",
+      "actor": "co_hang_xoi",
+      "prompt": "Cháu gái cô xinh lắm, mê người đầu trọc. Sư ra gặp một tí, không ưng thì về tu tiếp.",
+      "choices": [
+        {
+          "text": "Từ chối khéo",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "niem_kinh"
+            }
+          ],
+          "merit": 6,
+          "karma": 5,
+          "reply": "Tiếc ghê. Cháu cô bán trà sữa đó sư.",
+          "verdict": "Đứng vững trước mai mối. Công đức có hương trà sữa!",
+          "thought": "Trà sữa có trân châu không nhỉ."
+        },
+        {
+          "text": "Hỏi xin ảnh xem thử",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "dung_day"
+            }
+          ],
+          "merit": 2,
+          "karma": 25,
+          "reply": "Ảnh đây, cháu cô lọc mặt hơi nhiều.",
+          "verdict": "Tu mà xem ảnh gái. Tâm lọc filter!",
+          "thought": "Lọc tới mức không còn mặt."
+        },
+        {
+          "text": "Đồng ý đi gặp liền",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "bo_chay"
+            }
+          ],
+          "merit": 1,
+          "karma": 45,
+          "reply": "Ơ sư chạy nhanh thế! Cô chưa đọc địa chỉ!",
+          "verdict": "Bỏ chùa đi xem mắt. Hoàn tục cấp tốc!",
+          "thought": "Chạy ra cổng mới nhớ không biết nhà."
+        }
+      ]
+    },
+    {
+      "title": "ĐẠT KHÔNG CHÍN HỌC THIỀN",
+      "actor": "dat_khong_chin",
+      "prompt": "Em ngồi thiền cạnh sư. Năm giây sau em ngủ, ngáy to hơn tiếng mõ.",
+      "choices": [
+        {
+          "text": "Để nó ngủ",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "niem_kinh"
+            }
+          ],
+          "merit": 5,
+          "karma": 5,
+          "reply": "Khò... khò... dạ con giác ngộ rồi... khò.",
+          "verdict": "Thiền chung với tiếng ngáy. Định lực bậc thầy!",
+          "thought": "Nó ngủ còn sâu hơn mình thiền."
+        },
+        {
+          "text": "Gõ mõ vào tai",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "cam_gay"
+            }
+          ],
+          "merit": 3,
+          "karma": 15,
+          "reply": "Ơ! Em đang mơ thấy đắc đạo mà!",
+          "verdict": "Gõ mõ đánh thức giấc mơ đắc đạo!",
+          "thought": "Đắc đạo trong mơ cũng tính à."
+        },
+        {
+          "text": "Đẩy ngã ra sân",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "dung_day"
+            },
+            {
+              "who": "actor",
+              "do": "nga"
+            }
+          ],
+          "merit": 1,
+          "karma": 35,
+          "reply": "Em ngã xong ngủ tiếp luôn sư ạ.",
+          "verdict": "Đẩy người ngồi thiền. Nghiệp lăn ra sân!",
+          "thought": "Ngã rồi vẫn ngáy. Đúng là chưa chín."
         }
       ]
     }

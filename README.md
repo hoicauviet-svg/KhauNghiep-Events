@@ -31,6 +31,12 @@ Khi tải file lên, trang tự nhận loại file:
 
 Trang kiểm tra lỗi trên bản kết quả và liệt kê từng mục thêm mới, cập nhật, xoá hay không đổi. Khi lưu, trang tải lại bản mới nhất trên GitHub rồi làm lại để không mất sửa đổi của người khác.
 
+## Số tình huống mỗi màn
+
+- Màn cố định chơi đủ số tình huống có trong màn đó. Hiện là 4, 4, 5, 5, 6.
+- Màn random lấy số tình huống theo `rules.randomStageEvents`, hiện là 6, 6, 7, 7, 8. Hết danh sách thì dùng số cuối. Bản app cũ chỉ đọc `rules.eventsPerRandomStage`.
+- Tổng số tình huống trong `randomPool` quyết định có bao nhiêu màn random. Hết kho thì người chơi đắc đạo.
+
 ## Giới hạn
 
 - Công đức mỗi lựa chọn từ 1 đến 6, khẩu nghiệp từ 5 đến 45.
