@@ -1,0 +1,57 @@
+{
+  "characters": [
+    {
+      "id": "anh_grab",
+      "name": "Anh Grab",
+      "shape": "person",
+      "color": "#2DB34A",
+      "tag": "ĐÓN NHẦM"
+    }
+  ],
+  "stages": [],
+  "randomPool": [
+    {
+      "title": "GRAB ĐÓN NHẦM SƯ",
+      "actor": "anh_grab",
+      "prompt": "Anh ơi điểm đón ghi chùa. Khách tên Tèo, có phải anh không?",
+      "choices": [
+        {
+          "text": "Lên xe luôn",
+          "steps": [
+            { "who": "monk", "do": "dung_day" }
+          ],
+          "merit": 2,
+          "karma": 20,
+          "reply": "Ủa thầy đi đâu? Khách em ở bãi xe mà!",
+          "verdict": "Bỏ chùa đi xe ôm công nghệ giữa giờ farm!",
+          "thought": "Tèo hay không thì cũng năm sao."
+        },
+        {
+          "text": "Niệm cho nó đi",
+          "steps": [
+            { "who": "monk", "do": "niem_kinh" },
+            { "who": "actor", "do": "chay_mat" }
+          ],
+          "merit": 5,
+          "karma": 8,
+          "reply": "Thôi em huỷ cuốc!",
+          "verdict": "Đuổi khách bằng kinh, vẫn còn lịch sự.",
+          "thought": "Huỷ cuốc mà không trừ điểm thầy."
+        },
+        {
+          "text": "Phang cho một gậy",
+          "steps": [
+            { "who": "monk", "do": "cam_gay" },
+            { "who": "monk", "do": "dap" },
+            { "who": "actor", "do": "nga" }
+          ],
+          "merit": 1,
+          "karma": 40,
+          "reply": "Một sao! Một sao!",
+          "verdict": "Đánh tài xế. Bị chấm một sao cả chùa!",
+          "thought": "Một sao mà công đức vẫn lên."
+        }
+      ]
+    }
+  ]
+}

@@ -1,30 +1,18 @@
 (() => {
   "use strict";
 
-  const LIMITS = { merit: [1, 6], karma: [5, 45] };
-  const SETTINGS_KEY = "kn-editor-settings";
-  const DEFAULT_SETTINGS = { owner: "hoicauviet-svg", repo: "KhauNghiep-Events", branch: "main", token: "" };
+  const { LIMITS, settings, h, serialize } = KN;
 
   let data = null;
   let loadedSha = null;
   let dirty = false;
   let selection = { kind: "characters" };
-  let settings = { ...DEFAULT_SETTINGS, ...JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}") };
 
   const $ = (id) => document.getElementById(id);
   const statusEl = $("status");
-
-  function h(tag, attrs = {}, ...children) {
-    const el = document.createElement(tag);
-    for (const [key, value] of Object.entries(attrs)) {
-      if (value == null || value === false) continue;
-      if (key.startsWith("on")) el.addEventListener(key.slice(2), value);
-      else if (key === "value") el.value = value;
-      else el.setAttribute(key, value === true ? "" : value);
-    }
-    for (const child of children.flat()) if (child != null) el.append(child);
-    return el;
-  }
+  const validate = () => KN.validate(data);
+  const normalize = () => KN.normalize(data);
+  const allEvents = () => KN.allEvents(data);
 
   function setStatus(text, kind = "") {
     statusEl.textContent = text;
@@ -36,59 +24,17 @@
     renderSidebar();
   }
 
-  // ---------- Encoding ----------
-  const serialize = (value) => JSON.stringify(value, null, 2) + "\n";
-  function toBase64(text) {
-    const bytes = new TextEncoder().encode(text);
-    let binary = "";
-    for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
-    return btoa(binary);
-  }
-  function fromBase64(b64) {
-    const binary = atob(b64.replace(/\n/g, ""));
-    return new TextDecoder().decode(Uint8Array.from(binary, (c) => c.charCodeAt(0)));
-  }
-
-  // ---------- GitHub ----------
-  function api(path, options = {}) {
-    return fetch(`https://api.github.com/repos/${settings.owner}/${settings.repo}/${path}`, {
-      ...options,
-      headers: {
-        Accept: "application/vnd.github+json",
-        Authorization: `Bearer ${settings.token}`,
-        "X-GitHub-Api-Version": "2022-11-28",
-        ...(options.headers || {}),
-      },
-    }).then(async (res) => {
-      if (!res.ok) throw new Error(`GitHub ${res.status}: ${(await res.json().catch(() => ({}))).message || res.statusText}`);
-      return res.json();
-    });
-  }
-  const getFile = (name) => api(`contents/${name}?ref=${encodeURIComponent(settings.branch)}&t=${Date.now()}`);
-  const putFile = (name, text, sha, message) =>
-    api(`contents/${name}`, {
-      method: "PUT",
-      body: JSON.stringify({ message, content: toBase64(text), sha, branch: settings.branch }),
-    });
-
   // ---------- Load ----------
   async function load() {
     if (dirty && !confirm("Bỏ các thay đổi chưa lưu?")) return;
     setStatus("Đang tải…");
     try {
-      if (settings.token) {
-        const file = await getFile("events.json");
-        data = JSON.parse(fromBase64(file.content));
-        loadedSha = file.sha;
-        setStatus(`Đã tải từ GitHub (${settings.owner}/${settings.repo}@${settings.branch}).`);
-      } else {
-        const res = await fetch(`events.json?t=${Date.now()}`);
-        if (!res.ok) throw new Error(`Không tải được events.json (${res.status}).`);
-        data = await res.json();
-        loadedSha = null;
-        setStatus("Đã tải bản đang chạy trên web. Nhập token GitHub để lưu được.");
-      }
-      normalize();
+      const current = await KN.loadCurrent();
+      data = current.data;
+      loadedSha = current.sha;
+      setStatus(current.source === "github"
+        ? `Đã tải từ GitHub (${settings.owner}/${settings.repo}@${settings.branch}).`
+        : "Đã tải bản đang chạy trên web. Nhập token GitHub để lưu được.");
       dirty = false;
       if (!isSelectionValid()) selection = { kind: "characters" };
       render();
@@ -96,64 +42,7 @@
       setStatus(err.message, "error");
     }
   }
-  function normalize() {
-    data.characters ||= [];
-    data.actions ||= [];
-    data.stages ||= [];
-    data.randomPool ||= [];
-    data.rules ||= {};
-    for (const event of allEvents()) {
-      event.choices ||= [];
-      for (const choice of event.choices) choice.steps ||= [];
-    }
-  }
-  function allEvents() {
-    return [...data.stages.flatMap((s) => s.events || []), ...data.randomPool];
-  }
 
-  // ---------- Validation ----------
-  function validate() {
-    const problems = [];
-    const charIds = new Set();
-    for (const c of data.characters) {
-      if (!c.id) problems.push({ where: "Nhân vật", msg: `"${c.name || "?"}" chưa có id.` });
-      else if (charIds.has(c.id)) problems.push({ where: "Nhân vật", msg: `Trùng id "${c.id}".` });
-      charIds.add(c.id);
-      if (!c.name) problems.push({ where: "Nhân vật", msg: `"${c.id}" chưa có tên.` });
-      if (!["person", "dog", "bird"].includes(c.shape)) problems.push({ where: "Nhân vật", msg: `"${c.id}" có hình "${c.shape}" không hợp lệ.` });
-    }
-    const actions = new Map(data.actions.map((a) => [a.id, a.who]));
-    const titles = new Map();
-    const check = (event, where, key) => {
-      const add = (msg) => problems.push({ where, msg, key });
-      if (!event.title) add("Thiếu tiêu đề.");
-      else titles.set(event.title, (titles.get(event.title) || 0) + 1);
-      if (!charIds.has(event.actor)) add(`Nhân vật "${event.actor}" không có trong danh sách.`);
-      if (!event.prompt) add("Thiếu câu mở đầu.");
-      if (!event.choices.length) add("Chưa có lựa chọn nào.");
-      event.choices.forEach((choice, i) => {
-        const tag = `Lựa chọn ${i + 1}`;
-        if (!choice.text) add(`${tag}: thiếu câu chọn.`);
-        if (!choice.verdict) add(`${tag}: thiếu lời phán.`);
-        for (const field of ["merit", "karma"]) {
-          const [lo, hi] = LIMITS[field];
-          const v = choice[field];
-          if (!Number.isInteger(v) || v < lo || v > hi) add(`${tag}: ${field === "merit" ? "công đức" : "khẩu nghiệp"} phải từ ${lo} đến ${hi}.`);
-        }
-        choice.steps.forEach((step, j) => {
-          if (!actions.has(step.do)) add(`${tag}, bước ${j + 1}: động tác "${step.do}" không tồn tại.`);
-          else if (actions.get(step.do) !== step.who) add(`${tag}, bước ${j + 1}: "${step.do}" là động tác của ${actions.get(step.do) === "monk" ? "sư" : "khách"}.`);
-        });
-      });
-    };
-    data.stages.forEach((stage, s) => {
-      if (!stage.title) problems.push({ where: `Màn ${s + 1}`, msg: "Thiếu tên màn.", key: `stage:${s}` });
-      (stage.events || []).forEach((e, i) => check(e, `Màn ${s + 1} · ${e.title || "cảnh " + (i + 1)}`, `stage:${s}:${i}`));
-    });
-    data.randomPool.forEach((e, i) => check(e, `Kho random · ${e.title || "cảnh " + (i + 1)}`, `pool:${i}`));
-    for (const [title, count] of titles) if (count > 1) problems.push({ where: "Toàn bộ", msg: `Tiêu đề "${title}" bị trùng ${count} lần.` });
-    return problems;
-  }
   function showReport(problems, title) {
     $("report-title").textContent = title;
     const list = $("report-list");
@@ -172,22 +61,16 @@
     if (problems.length) { showReport(problems, "Chưa lưu được, còn lỗi"); return; }
     setStatus("Đang lưu…");
     try {
-      const current = await getFile("events.json");
+      const current = await KN.getFile("events.json");
       if (loadedSha && current.sha !== loadedSha &&
           !confirm("Kịch bản trên GitHub đã bị sửa từ lúc bạn tải. Vẫn ghi đè?")) {
         setStatus("Đã huỷ lưu.", "dirty");
         return;
       }
-      const manifestFile = await getFile("manifest.json");
-      const manifest = JSON.parse(fromBase64(manifestFile.content));
-      const version = (manifest.version || 0) + 1;
-      const saved = await putFile("events.json", serialize(data), current.sha, `Cập nhật kịch bản v${version}`);
-      loadedSha = saved.content.sha;
-      manifest.version = version;
-      manifest.updatedAt = new Date().toISOString();
-      await putFile("manifest.json", serialize(manifest), manifestFile.sha, `Manifest v${version}`);
+      const saved = await KN.saveEvents(data, current.sha, "Cập nhật kịch bản");
+      loadedSha = saved.sha;
       dirty = false;
-      setStatus(`Đã lưu bản v${version}. Hostinger sẽ tự cập nhật sau ít phút.`);
+      setStatus(`Đã lưu bản v${saved.version}. Hostinger sẽ tự cập nhật sau ít phút.`);
       renderSidebar();
     } catch (err) {
       setStatus(err.message, "error");
@@ -245,7 +128,7 @@
     } else if (action === "clear") {
       settings.token = "";
     } else return;
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    KN.saveSettings();
     setStatus(settings.token ? "Đã lưu cài đặt. Bấm Tải lại để lấy bản mới nhất từ GitHub." : "Đã xoá token.");
   });
 
