@@ -15,3 +15,5 @@ Options -Indexes
     Header set Cache-Control "no-cache"
   </FilesMatch>
 </IfModule>
+
+RedirectMatch 404 ^/\.(hostinger|git)
