@@ -16,6 +16,8 @@ Kho lưu kịch bản cho game Khẩu Nghiệp và trang web để sửa kịch 
 
 Không có token thì vẫn xem và sửa được, rồi bấm **Tải file JSON** để lưu về máy.
 
+Muốn thay cả kịch bản bằng một file có sẵn thì bấm **Nhập file JSON** hoặc kéo thả file vào trang. Trang kiểm tra lỗi ngay. Nếu file không có danh sách động tác thì giữ danh sách hiện tại. File nhập chỉ nằm trong trình duyệt cho tới khi bấm **Lưu lên GitHub**.
+
 ## Giới hạn
 
 - Công đức mỗi lựa chọn từ 1 đến 6, khẩu nghiệp từ 5 đến 45.

@@ -194,6 +194,37 @@
     }
   }
 
+  async function importFile(file) {
+    if (!file) return;
+    let parsed;
+    try {
+      parsed = JSON.parse(await file.text());
+    } catch (err) {
+      showMessage("Không nhập được", [`File "${file.name}" không phải JSON hợp lệ: ${err.message}`]);
+      return;
+    }
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed) || (!parsed.stages && !parsed.randomPool)) {
+      showMessage("Không nhập được", [`File "${file.name}" không có "stages" hoặc "randomPool". Đây không phải file kịch bản.`]);
+      return;
+    }
+    if (dirty && !confirm("Nhập file sẽ thay toàn bộ kịch bản đang sửa và bỏ các thay đổi chưa lưu. Tiếp tục?")) return;
+    // Keep the action list when the file has none, since it only describes what the game code can play.
+    if (!parsed.actions?.length && data?.actions?.length) parsed.actions = data.actions;
+    data = parsed;
+    normalize();
+    selection = { kind: "characters" };
+    dirty = true;
+    render();
+    const problems = validate();
+    setStatus(`Đã nhập "${file.name}". Kiểm tra rồi bấm Lưu lên GitHub.`, "dirty");
+    showReport(problems, problems.length ? `Đã nhập, còn ${problems.length} lỗi cần sửa trước khi lưu` : "Đã nhập file");
+  }
+  function showMessage(title, lines) {
+    $("report-title").textContent = title;
+    $("report-list").replaceChildren(...lines.map((line) => h("li", { class: "bad" }, line)));
+    $("report").showModal();
+  }
+
   function download() {
     const url = URL.createObjectURL(new Blob([serialize(data)], { type: "application/json" }));
     h("a", { href: url, download: "events.json" }).click();
@@ -425,6 +456,14 @@
   $("btn-reload").onclick = load;
   $("btn-validate").onclick = () => showReport(validate(), "Kết quả kiểm tra");
   $("btn-download").onclick = download;
+  $("btn-import").onclick = () => $("import-file").click();
+  $("import-file").onchange = (e) => { importFile(e.target.files[0]); e.target.value = ""; };
+  document.addEventListener("dragover", (e) => { if (e.dataTransfer?.types.includes("Files")) e.preventDefault(); });
+  document.addEventListener("drop", (e) => {
+    if (!e.dataTransfer?.files.length) return;
+    e.preventDefault();
+    importFile(e.dataTransfer.files[0]);
+  });
   $("btn-settings").onclick = openSettings;
   $("btn-save").onclick = save;
   window.addEventListener("beforeunload", (e) => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
