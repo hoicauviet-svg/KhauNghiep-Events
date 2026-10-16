@@ -107,3 +107,6 @@ table.changes tr.remove td:last-child { color: var(--bad); }
   .grid-2, .grid-3 { grid-template-columns: 1fr; }
   .step { grid-template-columns: 1fr 1fr; }
 }
+
+.toggle { display: flex; align-items: center; gap: 10px; margin: 12px 0 6px; font-weight: 600; cursor: pointer; }
+.toggle input { width: 20px; height: 20px; }

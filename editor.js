@@ -128,6 +128,7 @@
 
     const groups = [
       h("div", { class: "nav-group" },
+        item(`Cài đặt game · màn 6+ ${data.rules.randomStagesEnabled ? "đang mở" : "đang khoá"}`, { kind: "game" }, "nav-stage"),
         item(`Nhân vật (${data.characters.length})`, { kind: "characters" }, "nav-stage"),
         item(`Động tác (${data.actions.length})`, { kind: "actions" }, "nav-stage")),
     ];
@@ -186,6 +187,33 @@
         ...rows),
       h("div", { class: "toolbar", style: "margin-top:12px" },
         h("button", { onclick: () => { data.characters.push({ id: `nhan_vat_${data.characters.length + 1}`, name: "Nhân Vật Mới", shape: "person", color: "#8B9872", tag: "MỚI" }); markDirty(); render(); } }, "+ Nhân vật")),
+    ];
+  }
+
+  function renderGame() {
+    const rules = data.rules;
+    const counts = Array.isArray(rules.randomStageEvents) ? rules.randomStageEvents : [];
+    const total = counts.reduce((a, b) => a + b, 0);
+    return [
+      h("h1", {}, "Cài đặt game"),
+      h("div", { class: "sub" }, `5 màn cố định luôn chơi được. Kho random hiện có ${data.randomPool.length} tình huống.`),
+      h("label", { class: "toggle" },
+        h("input", { type: "checkbox", checked: !!rules.randomStagesEnabled, onchange: (e) => {
+          if (e.target.checked && !confirm("Mở màn 6 trở đi cho mọi người chơi? App đang chạy sẽ nhận sau khi bạn bấm Lưu lên GitHub.")) { e.target.checked = false; return; }
+          rules.randomStagesEnabled = e.target.checked; markDirty(); render();
+        } }),
+        h("span", {}, "Mở màn 6 trở đi (kho random)")),
+      h("div", { class: "sub" }, rules.randomStagesEnabled
+        ? "Đang mở: hết màn 5 người chơi đi tiếp sang kho random."
+        : "Đang khoá: hết màn 5 là ĐẮC ĐẠO, chờ màn mới. Giữ khoá trong lúc app chờ duyệt."),
+      field("Số tình huống từng màn random, cách nhau bằng dấu phẩy", h("input", {
+        value: counts.join(", "),
+        onchange: (e) => {
+          rules.randomStageEvents = e.target.value.split(/[,\s]+/).map((n) => parseInt(n, 10)).filter((n) => n > 0);
+          markDirty(); render();
+        },
+      })),
+      h("div", { class: "sub" }, `${counts.length} màn random, tổng ${total} tình huống. ${total < data.randomPool.length ? "Hết danh sách thì các màn sau dùng số cuối." : ""}`),
     ];
   }
 
@@ -291,7 +319,8 @@
   function render() {
     renderSidebar();
     let content;
-    if (selection.kind === "actions") content = renderActions();
+    if (selection.kind === "game") content = renderGame();
+    else if (selection.kind === "actions") content = renderActions();
     else if (selection.kind === "stage") content = renderStage(selection.s);
     else if (selection.kind === "event") content = renderEvent(selection);
     else content = renderCharacters();

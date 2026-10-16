@@ -34,8 +34,15 @@ Trang kiểm tra lỗi trên bản kết quả và liệt kê từng mục thêm
 ## Số tình huống mỗi màn
 
 - Màn cố định chơi đủ số tình huống có trong màn đó. Hiện là 4, 4, 5, 5, 6.
-- Màn random lấy số tình huống theo `rules.randomStageEvents`, hiện là 6, 6, 7, 7, 8, 10. Hết danh sách thì dùng số cuối. Bản app cũ chỉ đọc `rules.eventsPerRandomStage`.
+- Màn random lấy số tình huống theo `rules.randomStageEvents`, hiện là 6, 6, 7, 7, 8, 8, 8, 9, 9. Hết danh sách thì dùng số cuối. Bản app cũ chỉ đọc `rules.eventsPerRandomStage`.
 - Tổng số tình huống trong `randomPool` quyết định có bao nhiêu màn random. Hết kho thì người chơi đắc đạo.
+
+## Khoá màn 6 trở đi
+
+- 5 màn cố định chỉ dùng lời lẽ chuẩn mực để app qua kiểm duyệt. Tình huống bựa nằm hết trong `randomPool`.
+- `rules.randomStagesEnabled` quyết định có chơi màn 6 trở đi hay không. Thiếu trường này thì coi như khoá. Khi khoá, hết màn 5 là đắc đạo và chờ màn mới.
+- Bật hoặc tắt ở mục **Cài đặt game** trên trang sửa kịch bản, rồi bấm **Lưu lên GitHub**. App đang mở sẽ nhận bản mới, người chơi đang chờ ở màn 5 sẽ đi tiếp sang màn 6.
+- Nhập file JSON đầy đủ mà thiếu cờ này thì cờ sẽ về khoá.
 
 ## Giới hạn
 
