@@ -87,7 +87,6 @@ code { background: #171310; padding: 1px 5px; border-radius: 4px; }
 .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; margin-bottom: 18px; }
 .card ul.hint { padding-left: 18px; }
 .card .toolbar { margin: 12px 0 0; }
-pre.code { background: #171310; border: 1px solid var(--line); border-radius: 8px; padding: 12px; max-height: 320px; overflow: auto; font-size: 12px; margin: 12px 0 0; }
 .dropzone { display: block; border: 2px dashed var(--line); border-radius: 10px; padding: 28px; text-align: center; color: var(--muted); cursor: pointer; }
 .dropzone:hover, .dropzone.over { border-color: var(--accent); color: var(--text); }
 #summary.ok { color: var(--ok); }
@@ -100,6 +99,7 @@ table.changes td { padding: 6px; border-bottom: 1px solid var(--line); }
 table.changes tr.add td:last-child { color: var(--ok); }
 table.changes tr.update td:last-child { color: var(--accent); }
 table.changes tr.same td { color: var(--muted); }
+table.changes tr.remove td:last-child { color: var(--bad); }
 
 @media (max-width: 760px) {
   .layout { grid-template-columns: 1fr; }

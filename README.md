@@ -5,7 +5,7 @@ Kho lưu kịch bản cho game Khẩu Nghiệp và trang web để sửa kịch 
 - `events.json`: nhân vật, động tác, 5 màn cố định và kho tình huống random. Game tải file này.
 - `manifest.json`: `version` tăng mỗi lần lưu. App so `version` để biết có kịch bản mới. `schema` chỉ tăng khi cấu trúc dữ liệu đổi và cần bản app mới.
 - `index.html`, `editor.js`, `editor.css`: trang sửa kịch bản, chạy hoàn toàn trên trình duyệt.
-- `import.html`, `import.js`, `mau-import.json`: trang gộp kịch bản từ file và file mẫu.
+- `import.html`, `import.js`, `mau-import.json`: trang file JSON và file mẫu.
 - `common.js`: phần kiểm tra lỗi và lưu lên GitHub dùng chung cho hai trang.
 
 ## Sửa kịch bản
@@ -16,20 +16,20 @@ Kho lưu kịch bản cho game Khẩu Nghiệp và trang web để sửa kịch 
 4. Bấm **Lưu lên GitHub**. Trang kiểm tra lỗi trước, rồi commit `events.json` và tăng `version` trong `manifest.json`.
 5. Hostinger tự deploy lại khi nhánh `main` có commit mới.
 
-Không có token thì vẫn xem và sửa được, rồi bấm **Tải file JSON** để lưu về máy.
+## File JSON
 
-Muốn thay cả kịch bản bằng một file có sẵn thì bấm **Nhập file JSON** hoặc kéo thả file vào trang. Trang kiểm tra lỗi ngay. Nếu file không có danh sách động tác thì giữ danh sách hiện tại. File nhập chỉ nằm trong trình duyệt cho tới khi bấm **Lưu lên GitHub**.
+Mọi việc với file JSON nằm ở trang `import.html` (nút **File JSON** trên trang sửa): tải file mẫu, tải kịch bản hiện tại về máy, và tải file lên.
 
-## Gộp kịch bản từ file
+Khi tải file lên, trang tự nhận loại file:
 
-Trang `import.html` (nút **Gộp file JSON**) nhận file chỉ chứa phần muốn thêm hoặc sửa, không thay cả kịch bản. File mẫu là `mau-import.json`.
+- File có `actions` hoặc `rules` (như `events.json` tải về) là kịch bản đầy đủ và thay toàn bộ. Mục không có trong file sẽ bị xoá, trang hỏi lại trước khi lưu.
+- File khác là một phần kịch bản và được gộp vào bản hiện tại, không xoá gì. Xem `mau-import.json`.
+  - Nhân vật khớp theo `id`. Đã có thì cập nhật các trường có trong file, chưa có thì thêm.
+  - Màn khớp theo `title`. Chưa có thì thêm màn mới vào cuối.
+  - Tình huống khớp theo `title` trên toàn kịch bản. Đã có thì thay tại chỗ cũ, chưa có thì thêm vào màn hoặc `randomPool` ghi trong file.
+- Danh sách động tác luôn giữ nguyên.
 
-- Nhân vật khớp theo `id`. Đã có thì cập nhật các trường có trong file, chưa có thì thêm.
-- Màn khớp theo `title`. Chưa có thì thêm màn mới vào cuối.
-- Tình huống khớp theo `title` trên toàn kịch bản. Đã có thì thay tại chỗ cũ, chưa có thì thêm vào màn hoặc `randomPool` ghi trong file.
-- `actions` trong file bị bỏ qua.
-
-Trang kiểm tra lỗi trên bản sau khi gộp và liệt kê từng mục thêm mới, cập nhật hay không đổi. Khi lưu, trang tải lại bản mới nhất trên GitHub rồi gộp lại để không mất sửa đổi của người khác.
+Trang kiểm tra lỗi trên bản kết quả và liệt kê từng mục thêm mới, cập nhật, xoá hay không đổi. Khi lưu, trang tải lại bản mới nhất trên GitHub rồi làm lại để không mất sửa đổi của người khác.
 
 ## Giới hạn
 

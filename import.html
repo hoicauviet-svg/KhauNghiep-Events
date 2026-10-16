@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
-  <title>Khẩu Nghiệp · Nhập kịch bản</title>
+  <title>Khẩu Nghiệp · File JSON</title>
   <link rel="stylesheet" href="editor.css">
 </head>
 <body>
   <header class="topbar">
-    <div class="brand">KHẨU NGHIỆP <span>· nhập kịch bản</span></div>
+    <div class="brand">KHẨU NGHIỆP <span>· file JSON</span></div>
     <div class="status" id="status">Đang tải…</div>
     <div class="actions">
       <a class="button" href="index.html">Về trang sửa</a>
@@ -19,37 +19,24 @@
 
   <main class="page">
     <section class="card">
-      <h2>1. File mẫu</h2>
-      <p class="hint">
-        File nhập có cùng cấu trúc với <code>events.json</code> nhưng chỉ cần những phần muốn thêm hoặc sửa.
-        Có thể bỏ trống <code>characters</code>, <code>stages</code> hoặc <code>randomPool</code>.
-      </p>
-      <ul class="hint">
-        <li><b>Nhân vật</b> khớp theo <code>id</code>. Đã có thì cập nhật các trường có trong file, chưa có thì thêm.</li>
-        <li><b>Màn</b> khớp theo <code>title</code>. Chưa có thì thêm màn mới vào cuối.</li>
-        <li><b>Tình huống</b> khớp theo <code>title</code> trên toàn kịch bản. Đã có thì thay nội dung tại chỗ cũ. Chưa có thì thêm vào màn hoặc kho random ghi trong file.</li>
-        <li>Danh sách <code>actions</code> trong file bị bỏ qua vì động tác do code game quyết định.</li>
-      </ul>
-      <div class="toolbar">
-        <a class="button" href="mau-import.json" download>Tải file mẫu</a>
-        <button id="btn-use-sample">Dùng file mẫu để thử</button>
-      </div>
-      <pre class="code" id="sample">Đang tải…</pre>
-    </section>
-
-    <section class="card">
-      <h2>2. Chọn file</h2>
+      <h2>Tải file lên</h2>
       <label class="dropzone" id="dropzone">
         <input id="file" type="file" accept=".json,application/json" hidden>
         Kéo thả file JSON vào đây hoặc bấm để chọn file.
       </label>
-      <p class="hint">Hoặc dán nội dung JSON:</p>
-      <textarea id="paste" rows="8" placeholder='{ "characters": [], "stages": [], "randomPool": [] }'></textarea>
-      <div class="toolbar"><button id="btn-check" class="primary">Kiểm tra</button></div>
+      <ul class="hint">
+        <li>File có <code>actions</code> hoặc <code>rules</code> (file <code>events.json</code> tải về từ trang này) là <b>kịch bản đầy đủ</b>: thay toàn bộ kịch bản. Mục nào không có trong file sẽ bị xoá.</li>
+        <li>File khác là <b>một phần kịch bản</b>: gộp vào bản hiện tại. Nhân vật khớp theo <code>id</code>, màn và tình huống khớp theo <code>title</code>. Đã có thì cập nhật, chưa có thì thêm, không xoá gì.</li>
+        <li>Danh sách động tác luôn giữ nguyên vì do code game quyết định.</li>
+      </ul>
+      <div class="toolbar">
+        <a class="button" href="mau-import.json" download>Tải file mẫu</a>
+        <button id="btn-current">Tải kịch bản hiện tại</button>
+      </div>
     </section>
 
     <section class="card" id="result" hidden>
-      <h2>3. Kết quả</h2>
+      <h2 id="result-title">Kết quả</h2>
       <p id="summary"></p>
       <ul id="problems" class="problems"></ul>
       <table class="changes">
@@ -57,8 +44,8 @@
         <tbody id="changes"></tbody>
       </table>
       <div class="toolbar">
-        <button id="btn-apply" class="primary">Áp dụng và lưu lên GitHub</button>
-        <button id="btn-download">Tải file sau khi gộp</button>
+        <button id="btn-apply" class="primary">Lưu lên GitHub</button>
+        <button id="btn-download">Tải file kết quả</button>
       </div>
     </section>
   </main>

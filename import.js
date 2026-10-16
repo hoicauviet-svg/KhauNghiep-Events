@@ -25,8 +25,8 @@
   const same = (a, b) => canonical(a) === canonical(b);
 
   // ---------- Parse ----------
+  // A file with actions or rules is a whole events.json and replaces everything; anything else is merged.
   function parseIncoming(text) {
-    const problems = [];
     let raw;
     try {
       raw = JSON.parse(text);
@@ -36,17 +36,32 @@
     if (!raw || typeof raw !== "object" || Array.isArray(raw))
       return { problems: [{ where: "File", msg: "File phải là một object có characters, stages hoặc randomPool." }] };
 
+    const problems = [];
     for (const key of ["characters", "stages", "randomPool"])
       if (raw[key] != null && !Array.isArray(raw[key])) problems.push({ where: "File", msg: `"${key}" phải là một mảng.` });
     if (problems.length) return { problems };
 
+    const full = Array.isArray(raw.actions) || (raw.rules != null && typeof raw.rules === "object");
     const file = {
+      full,
+      raw,
       characters: raw.characters || [],
       stages: (raw.stages || []).map((s) => ({ ...s, events: s.events || [] })),
       randomPool: raw.randomPool || [],
     };
-    if (!file.characters.length && !file.randomPool.length && !file.stages.length)
+
+    if (full) {
+      if (!file.characters.length) problems.push({ where: "File", msg: "Kịch bản đầy đủ phải có ít nhất một nhân vật." });
+      if (!file.stages.length) problems.push({ where: "File", msg: "Kịch bản đầy đủ phải có ít nhất một màn." });
+    } else if (!file.characters.length && !file.randomPool.length && !file.stages.length) {
       problems.push({ where: "File", msg: "File không có nhân vật, màn hay tình huống nào." });
+    }
+
+    file.stages.forEach((s, i) => {
+      if (!s.title) problems.push({ where: `Màn ${i + 1} trong file`, msg: "Thiếu tên màn." });
+      if (!Array.isArray(s.events)) problems.push({ where: `Màn ${s.title || i + 1}`, msg: `"events" phải là một mảng.` });
+    });
+    if (problems.length) return { problems };
 
     const ids = new Set();
     for (const c of file.characters) {
@@ -54,12 +69,6 @@
       else if (ids.has(c.id)) problems.push({ where: "Nhân vật", msg: `File có hai nhân vật cùng id "${c.id}".` });
       ids.add(c.id);
     }
-    file.stages.forEach((s, i) => {
-      if (!s.title) problems.push({ where: `Màn ${i + 1} trong file`, msg: "Thiếu tên màn, không biết gộp vào màn nào." });
-      if (!Array.isArray(s.events)) problems.push({ where: `Màn ${s.title || i + 1}`, msg: `"events" phải là một mảng.` });
-    });
-    if (problems.length) return { problems };
-
     const titles = new Set();
     for (const e of [...file.stages.flatMap((s) => s.events), ...file.randomPool]) {
       if (!e || typeof e !== "object") { problems.push({ where: "Tình huống", msg: "Có tình huống không phải object." }); continue; }
@@ -69,6 +78,53 @@
       KN.normalizeEvent(e);
     }
     return problems.length ? { problems } : { file, problems };
+  }
+
+  const stageLabel = (data, s) => `Màn ${s + 1} · ${data.stages[s].title}`;
+  function eventIndex(data) {
+    const located = new Map();
+    data.stages.forEach((stage, s) => stage.events.forEach((e, i) => located.set(e.title, { list: stage.events, i, where: stageLabel(data, s) })));
+    data.randomPool.forEach((e, i) => located.set(e.title, { list: data.randomPool, i, where: "Kho random" }));
+    return located;
+  }
+
+  // ---------- Replace ----------
+  function replace(base, file) {
+    const { raw } = file;
+    const data = KN.normalize({
+      ...clone(raw),
+      characters: clone(file.characters),
+      stages: clone(file.stages),
+      randomPool: clone(file.randomPool),
+      actions: clone(base.actions),
+      rules: clone(raw.rules || base.rules),
+    });
+    if (raw.status == null && base.status != null) data.status = base.status;
+    const changes = [];
+
+    const oldChars = new Map(base.characters.map((c) => [c.id, c]));
+    const newIds = new Set(data.characters.map((c) => c.id));
+    for (const c of data.characters) {
+      const old = oldChars.get(c.id);
+      changes.push({ type: "Nhân vật", name: `${c.name || c.id} (${c.id})`, where: "", action: !old ? "add" : same(old, c) ? "same" : "update" });
+    }
+    for (const c of base.characters) if (!newIds.has(c.id)) changes.push({ type: "Nhân vật", name: `${c.name} (${c.id})`, where: "", action: "remove" });
+
+    const oldStages = new Set(base.stages.map((s) => s.title));
+    const newStages = new Set(data.stages.map((s) => s.title));
+    data.stages.forEach((s, i) => { if (!oldStages.has(s.title)) changes.push({ type: "Màn", name: s.title, where: stageLabel(data, i), action: "add" }); });
+    base.stages.forEach((s, i) => { if (!newStages.has(s.title)) changes.push({ type: "Màn", name: s.title, where: stageLabel(base, i), action: "remove" }); });
+
+    const oldEvents = eventIndex(base);
+    const newEvents = eventIndex(data);
+    for (const [title, found] of newEvents) {
+      const old = oldEvents.get(title);
+      const action = !old ? "add" : same(old.list[old.i], found.list[found.i]) && old.where === found.where ? "same" : "update";
+      changes.push({ type: "Tình huống", name: title, where: found.where, action });
+    }
+    for (const [title, old] of oldEvents) if (!newEvents.has(title)) changes.push({ type: "Tình huống", name: title, where: old.where, action: "remove" });
+
+    return { data, changes };
   }
 
   // ---------- Merge ----------
@@ -88,11 +144,7 @@
       }
     }
 
-    const located = new Map();
-    const stageLabel = (s) => `Màn ${s + 1} · ${data.stages[s].title}`;
-    data.stages.forEach((stage, s) => stage.events.forEach((e, i) => located.set(e.title, { list: stage.events, i, where: stageLabel(s) })));
-    data.randomPool.forEach((e, i) => located.set(e.title, { list: data.randomPool, i, where: "Kho random" }));
-
+    const located = eventIndex(data);
     const putEvent = (event, list, where) => {
       const found = located.get(event.title);
       if (found) {
@@ -112,42 +164,48 @@
         const { events, ...rest } = stage;
         data.stages.push({ ...clone(rest), events: [] });
         s = data.stages.length - 1;
-        changes.push({ type: "Màn", name: stage.title, where: stageLabel(s), action: "add" });
+        changes.push({ type: "Màn", name: stage.title, where: stageLabel(data, s), action: "add" });
       }
-      for (const e of stage.events) putEvent(e, data.stages[s].events, stageLabel(s));
+      for (const e of stage.events) putEvent(e, data.stages[s].events, stageLabel(data, s));
     }
     for (const e of file.randomPool) putEvent(e, data.randomPool, "Kho random");
 
     return { data, changes };
   }
 
-  // ---------- Preview ----------
-  const ACTION_TEXT = { add: "Thêm mới", update: "Cập nhật", same: "Không đổi" };
+  const build = (base, file) => (file.full ? replace(base, file) : merge(base, file));
 
-  function check(text) {
+  // ---------- Preview ----------
+  const ACTION_TEXT = { add: "Thêm mới", update: "Cập nhật", same: "Không đổi", remove: "Xoá" };
+
+  function check(text, name) {
     if (!current) { setStatus("Chưa tải được kịch bản hiện tại.", "error"); return; }
     const parsed = parseIncoming(text);
     incoming = parsed.file || null;
-    preview = incoming ? merge(current.data, incoming) : null;
-    render([...parsed.problems, ...(preview ? KN.validate(preview.data) : [])]);
+    preview = incoming ? build(current.data, incoming) : null;
+    render([...parsed.problems, ...(preview ? KN.validate(preview.data) : [])], name);
   }
 
-  function render(problems) {
+  function render(problems, name) {
     $("result").hidden = false;
+    if (name) $("result-title").textContent = !incoming
+      ? `"${name}"`
+      : `"${name}" · ${incoming.full ? "kịch bản đầy đủ, thay toàn bộ" : "một phần kịch bản, gộp vào bản hiện tại"}`;
     const changes = preview ? preview.changes : [];
     const count = (a) => changes.filter((c) => c.action === a).length;
-    const changed = count("add") + count("update");
+    const changed = count("add") + count("update") + count("remove");
     const ok = preview && !problems.length;
 
     $("summary").textContent = !preview
       ? "Không nhập được file này."
-      : `${count("add")} thêm mới, ${count("update")} cập nhật, ${count("same")} không đổi.` +
-        (problems.length ? ` Còn ${problems.length} lỗi, sửa file rồi kiểm tra lại.` : changed ? " Không có lỗi." : " Không có gì để lưu.");
+      : `${count("add")} thêm mới, ${count("update")} cập nhật, ${count("remove")} xoá, ${count("same")} không đổi.` +
+        (problems.length ? ` Còn ${problems.length} lỗi, sửa file rồi tải lên lại.` : changed ? " Không có lỗi." : " Không có gì để lưu.");
     $("summary").className = ok ? "ok" : "bad";
 
     $("problems").replaceChildren(...problems.map((p) => h("li", { class: "bad" }, `${p.where}: ${p.msg}`)));
+    const order = { remove: 0, add: 1, update: 2, same: 3 };
     $("changes").replaceChildren(
-      ...changes.map((c) =>
+      ...[...changes].sort((a, b) => order[a.action] - order[b.action]).map((c) =>
         h("tr", { class: c.action }, h("td", {}, c.type), h("td", {}, c.name), h("td", {}, c.where), h("td", {}, ACTION_TEXT[c.action]))
       )
     );
@@ -160,20 +218,22 @@
   // ---------- Apply ----------
   async function apply() {
     if (!settings.token) { openSettings(); return; }
+    const removed = preview.changes.filter((c) => c.action === "remove").length;
+    if (removed && !confirm(`Sẽ xoá ${removed} mục không có trong file. Tiếp tục lưu?`)) return;
     $("btn-apply").disabled = true;
     setStatus("Đang lưu…");
     try {
-      // Merge again onto the newest copy so edits saved meanwhile are kept.
+      // Rebuild on the newest copy so edits saved meanwhile are kept when merging.
       current = await KN.loadCurrent();
-      const fresh = merge(current.data, incoming);
+      const fresh = build(current.data, incoming);
       const problems = KN.validate(fresh.data);
       preview = fresh;
       if (problems.length) {
         render(problems);
-        setStatus("Kịch bản trên GitHub vừa đổi và bản gộp có lỗi. Chưa lưu.", "error");
+        setStatus("Kịch bản trên GitHub vừa đổi và bản kết quả có lỗi. Chưa lưu.", "error");
         return;
       }
-      const saved = await KN.saveEvents(fresh.data, current.sha, "Nhập kịch bản");
+      const saved = await KN.saveEvents(fresh.data, current.sha, incoming.full ? "Nhập kịch bản đầy đủ" : "Gộp kịch bản");
       current = { data: fresh.data, sha: saved.sha, source: "github" };
       setStatus(`Đã lưu bản v${saved.version}. Hostinger sẽ tự cập nhật sau ít phút.`);
     } catch (err) {
@@ -182,11 +242,10 @@
     }
   }
 
-  function download() {
-    const blob = new Blob([serialize(preview.data)], { type: "application/json" });
-    const a = h("a", { href: URL.createObjectURL(blob), download: "events.json" });
-    a.click();
-    URL.revokeObjectURL(a.href);
+  function downloadJson(data) {
+    const url = URL.createObjectURL(new Blob([serialize(data)], { type: "application/json" }));
+    h("a", { href: url, download: "events.json" }).click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
   // ---------- Settings ----------
@@ -210,9 +269,7 @@
   // ---------- Input ----------
   async function readFile(file) {
     if (!file) return;
-    const text = await file.text();
-    $("paste").value = text;
-    check(text);
+    check(await file.text(), file.name);
   }
 
   const dropzone = $("dropzone");
@@ -225,10 +282,9 @@
     readFile(e.dataTransfer.files[0]);
   });
 
-  $("btn-check").onclick = () => check($("paste").value);
-  $("btn-use-sample").onclick = () => { $("paste").value = $("sample").textContent; check($("paste").value); };
+  $("btn-current").onclick = () => current && downloadJson(current.data);
   $("btn-apply").onclick = apply;
-  $("btn-download").onclick = download;
+  $("btn-download").onclick = () => downloadJson(preview.data);
   $("btn-settings").onclick = openSettings;
 
   async function loadCurrent() {
@@ -236,16 +292,12 @@
     try {
       current = await KN.loadCurrent();
       setStatus(current.source === "github"
-        ? `Gộp vào bản trên GitHub (${settings.owner}/${settings.repo}@${settings.branch}).`
-        : "Gộp vào bản đang chạy trên web. Nhập token GitHub để lưu được.");
+        ? `Bản hiện tại lấy từ GitHub (${settings.owner}/${settings.repo}@${settings.branch}).`
+        : "Bản hiện tại lấy từ web. Nhập token GitHub để lưu được.");
     } catch (err) {
       setStatus(err.message, "error");
     }
   }
 
-  fetch(`mau-import.json?t=${Date.now()}`)
-    .then((res) => (res.ok ? res.text() : Promise.reject(new Error(res.status))))
-    .then((text) => { $("sample").textContent = text; })
-    .catch(() => { $("sample").textContent = "Không tải được file mẫu."; });
   loadCurrent();
 })();
