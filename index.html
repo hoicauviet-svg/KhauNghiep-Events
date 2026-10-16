@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Khẩu Nghiệp · Sửa kịch bản</title>
+  <link rel="stylesheet" href="editor.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">KHẨU NGHIỆP <span>· sửa kịch bản</span></div>
+    <div class="status" id="status">Đang tải…</div>
+    <div class="actions">
+      <button id="btn-reload" title="Tải lại kịch bản mới nhất">Tải lại</button>
+      <button id="btn-validate">Kiểm tra</button>
+      <button id="btn-download">Tải file JSON</button>
+      <button id="btn-settings">Cài đặt GitHub</button>
+      <button id="btn-save" class="primary">Lưu lên GitHub</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <nav class="sidebar" id="sidebar"></nav>
+    <section class="editor" id="editor"></section>
+  </main>
+
+  <dialog id="settings">
+    <form method="dialog" class="settings-form">
+      <h2>Cài đặt GitHub</h2>
+      <p class="hint">Token chỉ lưu trong trình duyệt này. Dùng fine-grained token, chỉ cấp quyền <b>Contents: Read and write</b> cho repo kịch bản.</p>
+      <label>Chủ repo <input name="owner" required></label>
+      <label>Tên repo <input name="repo" required></label>
+      <label>Nhánh <input name="branch" required></label>
+      <label>Token <input name="token" type="password" autocomplete="off" placeholder="github_pat_…"></label>
+      <div class="row">
+        <button value="cancel" formnovalidate>Huỷ</button>
+        <button value="clear" formnovalidate>Xoá token</button>
+        <button value="save" class="primary">Lưu</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="report">
+    <form method="dialog">
+      <h2 id="report-title">Kết quả kiểm tra</h2>
+      <ul id="report-list"></ul>
+      <div class="row"><button class="primary">Đóng</button></div>
+    </form>
+  </dialog>
+
+  <script src="editor.js"></script>
+</body>
+</html>

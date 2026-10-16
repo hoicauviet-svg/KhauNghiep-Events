@@ -1,0 +1,17 @@
+AddDefaultCharset utf-8
+AddType application/json .json
+Options -Indexes
+
+<FilesMatch "^(README\.md|\.gitignore)$">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.json$">
+    Header set Access-Control-Allow-Origin "*"
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(html|js|css)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
