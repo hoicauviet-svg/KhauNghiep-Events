@@ -34,7 +34,7 @@ Trang kiểm tra lỗi trên bản kết quả và liệt kê từng mục thêm
 ## Số tình huống mỗi màn
 
 - Màn cố định chơi đủ số tình huống có trong màn đó. Hiện là 4, 4, 5, 5, 6.
-- Màn random lấy số tình huống theo `rules.randomStageEvents`, hiện là 6, 6, 7, 7, 8. Hết danh sách thì dùng số cuối. Bản app cũ chỉ đọc `rules.eventsPerRandomStage`.
+- Màn random lấy số tình huống theo `rules.randomStageEvents`, hiện là 6, 6, 7, 7, 8, 10. Hết danh sách thì dùng số cuối. Bản app cũ chỉ đọc `rules.eventsPerRandomStage`.
 - Tổng số tình huống trong `randomPool` quyết định có bao nhiêu màn random. Hết kho thì người chơi đắc đạo.
 
 ## Giới hạn

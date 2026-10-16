@@ -12,7 +12,8 @@
       6,
       7,
       7,
-      8
+      8,
+      10
     ],
     "stageSize": "Màn cố định càng về sau càng nhiều tình huống: 4, 4, 5, 5, 6."
   },
@@ -114,6 +115,13 @@
       "shape": "person",
       "color": "#D94C8A",
       "tag": "CHỐT ĐƠN"
+    },
+    {
+      "id": "quynh_mup_ghe",
+      "name": "Quỳnh Múp Ghê",
+      "shape": "person",
+      "color": "#E8483F",
+      "tag": "MÚP GHÊ"
     }
   ],
   "actions": [
@@ -3283,6 +3291,518 @@
           "reply": "Em ngã xong ngủ tiếp luôn sư ạ.",
           "verdict": "Đẩy người ngồi thiền. Nghiệp lăn ra sân!",
           "thought": "Ngã rồi vẫn ngáy. Đúng là chưa chín."
+        }
+      ]
+    },
+    {
+      "title": "QUỲNH MÚP XEM CHỈ TAY",
+      "actor": "quynh_mup_ghe",
+      "prompt": "Sư xem chỉ tay cho em với. Cầm tay em lâu lâu chút, em nghe nói phải cầm lâu mới linh.",
+      "choices": [
+        {
+          "text": "Xem bằng mắt, không cầm",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "niem_kinh"
+            }
+          ],
+          "merit": 6,
+          "karma": 5,
+          "reply": "Sư xem từ xa vậy sao thấy đường tình duyên?",
+          "verdict": "Xem chỉ tay cách hai mét. Định lực thép!",
+          "thought": "Đường tình duyên của nó dài hơn đường làng."
+        },
+        {
+          "text": "Cầm tay một tí thôi",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "dung_day"
+            }
+          ],
+          "merit": 2,
+          "karma": 25,
+          "reply": "Tay sư run quá. Sư bị lạnh hả?",
+          "verdict": "Cầm tay nữ thí chủ quá ba giây!",
+          "thought": "Ba giây mà như ba kiếp."
+        },
+        {
+          "text": "Phán tay này sát chồng",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "chui"
+            },
+            {
+              "who": "actor",
+              "do": "chay_mat"
+            }
+          ],
+          "merit": 1,
+          "karma": 40,
+          "reply": "Hu hu! Em chưa có chồng mà!",
+          "verdict": "Phán bừa dọa người ta khóc. Thầy bói dỏm!",
+          "thought": "Nói bừa mà cũng trúng tim đen."
+        }
+      ]
+    },
+    {
+      "title": "QUỲNH MÚP TẬP YOGA",
+      "actor": "quynh_mup_ghe",
+      "prompt": "Em tập yoga ở sân chùa cho có năng lượng. Tư thế con mèo này đúng chưa sư? Sư chỉnh giúp em cái lưng.",
+      "choices": [
+        {
+          "text": "Nhắm mắt niệm kinh",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "niem_kinh"
+            }
+          ],
+          "merit": 6,
+          "karma": 5,
+          "reply": "Sư nhắm mắt thì chỉnh kiểu gì?",
+          "verdict": "Nhắm mắt trước tư thế con mèo. Mèo cũng phục!",
+          "thought": "Mắt nhắm, tai vẫn nghe tiếng thở."
+        },
+        {
+          "text": "Chỉ bằng cây gậy",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "cam_gay"
+            }
+          ],
+          "merit": 3,
+          "karma": 15,
+          "reply": "Ơ sư chọc gậy nhột quá!",
+          "verdict": "Chỉnh yoga bằng gậy thiền. Giữ khoảng cách sáng tạo!",
+          "thought": "Gậy này sau phải rửa."
+        },
+        {
+          "text": "Tập cùng cho vui",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "dung_day"
+            },
+            {
+              "who": "actor",
+              "do": "nhay"
+            }
+          ],
+          "merit": 1,
+          "karma": 35,
+          "reply": "Sư dẻo ghê! Mai tập tiếp nha!",
+          "verdict": "Sư tập yoga đôi với gái. Năng lượng lệch kênh!",
+          "thought": "Lưng đau. Tâm còn đau hơn."
+        }
+      ]
+    },
+    {
+      "title": "QUỲNH MÚP CHECK-IN ÁO DÀI",
+      "actor": "quynh_mup_ghe",
+      "prompt": "Live đây các anh ơi! Em check-in chùa nè. Sư ơi lại đây chụp chung, em nghiêng nghiêng góc này cho múp.",
+      "choices": [
+        {
+          "text": "Quay lưng đi",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "quay_lung"
+            }
+          ],
+          "merit": 5,
+          "karma": 8,
+          "reply": "Lưng sư lên hình cũng có người hỏi giá kìa.",
+          "verdict": "Từ chối lên sóng với nữ sắc. Công đức có filter!",
+          "thought": "Lưng trọc chống nắng kém."
+        },
+        {
+          "text": "Đứng xa xa giơ tay chữ V",
+          "steps": [
+            {
+              "who": "actor",
+              "do": "livestream"
+            }
+          ],
+          "merit": 2,
+          "karma": 20,
+          "reply": "Ố, sư giơ chữ V kìa cả nhà!",
+          "verdict": "Sư làm dáng trên live gái xinh!",
+          "thought": "Bình luận toàn hỏi sư còn độc thân không."
+        },
+        {
+          "text": "Chen vào giữa khung hình",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "dung_day"
+            },
+            {
+              "who": "actor",
+              "do": "livestream"
+            }
+          ],
+          "merit": 1,
+          "karma": 40,
+          "reply": "Mười nghìn mắt xem rồi sư ơi!",
+          "verdict": "Sư chen vào giữa live gái. Nghiệp lên xu hướng!",
+          "thought": "Nổi tiếng một đêm. Tu lại mười năm."
+        }
+      ]
+    },
+    {
+      "title": "QUỲNH MÚP XIN ZALO",
+      "actor": "quynh_mup_ghe",
+      "prompt": "Sư cho em xin Zalo đi. Tối em nhắn hỏi đạo, khuya khuya em mới hay mất ngủ.",
+      "choices": [
+        {
+          "text": "Cho số tổng đài chùa",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "niem_kinh"
+            }
+          ],
+          "merit": 5,
+          "karma": 8,
+          "reply": "Gọi vô toàn nghe nhạc chờ tụng kinh!",
+          "verdict": "Đưa số tổng đài thay số riêng. Khôn có đạo!",
+          "thought": "Tổng đài đó cũng chính là số mình."
+        },
+        {
+          "text": "Bảo sư không có điện thoại",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "quay_lung"
+            }
+          ],
+          "merit": 3,
+          "karma": 15,
+          "reply": "Thế cái gì đang rung trong túi áo sư?",
+          "verdict": "Nói dối trước mặt nữ sắc!",
+          "thought": "Điện thoại chọn đúng lúc để rung."
+        },
+        {
+          "text": "Đọc số liền, đọc hai lần",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "dung_day"
+            }
+          ],
+          "merit": 1,
+          "karma": 40,
+          "reply": "Em lưu là: Sư Anh nha!",
+          "verdict": "Đọc số cho gái hai lần cho chắc. Tu kiểu gì!",
+          "thought": "Tối nay chắc mất ngủ thật."
+        }
+      ]
+    },
+    {
+      "title": "QUỲNH MÚP RƠI KẸP TÓC",
+      "actor": "quynh_mup_ghe",
+      "prompt": "Ối kẹp tóc em rơi dưới chân sư. Em cúi không nổi, váy hơi chật. Sư nhặt giúp em!",
+      "choices": [
+        {
+          "text": "Lấy gậy khều đưa lại",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "cam_gay"
+            }
+          ],
+          "merit": 6,
+          "karma": 5,
+          "reply": "Sư khều khéo ghê. Như gắp thú bông.",
+          "verdict": "Nhặt đồ bằng gậy, mắt không rời đất. Kỷ luật!",
+          "thought": "Kẹp tóc hình con bướm. Đừng nghĩ nhiều."
+        },
+        {
+          "text": "Cúi nhặt rồi đưa tận tay",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "dung_day"
+            }
+          ],
+          "merit": 3,
+          "karma": 18,
+          "reply": "Tay sư ấm ghê!",
+          "verdict": "Trao tận tay. Chạm nhẹ một phát nghiệp!",
+          "thought": "Chạm có một giây. Một giây thôi."
+        },
+        {
+          "text": "Giữ làm kỷ niệm",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "gian_do"
+            }
+          ],
+          "merit": 1,
+          "karma": 40,
+          "reply": "Ơ sư lấy kẹp tóc em làm gì?",
+          "verdict": "Tịch thu kẹp tóc nữ thí chủ làm kỷ vật!",
+          "thought": "Kẹp lên đầu trọc cũng không dính."
+        }
+      ]
+    },
+    {
+      "title": "QUỲNH MÚP NHỜ BÔI KEM",
+      "actor": "quynh_mup_ghe",
+      "prompt": "Nắng quá sư ơi. Sư bôi kem chống nắng sau lưng giúp em, chỗ em với không tới.",
+      "choices": [
+        {
+          "text": "Đưa cái quạt mo",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "nem_do_an"
+            }
+          ],
+          "merit": 6,
+          "karma": 5,
+          "reply": "Quạt mo thì chống nắng kiểu gì sư?",
+          "verdict": "Đưa quạt thay tay. Thoát nạn nhờ đồ cổ!",
+          "thought": "Tay vẫn sạch. Tâm thì hơi nắng."
+        },
+        {
+          "text": "Gọi Hiếu Hoa Hòe bôi giúp",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "chui"
+            }
+          ],
+          "merit": 3,
+          "karma": 18,
+          "reply": "Hiếu bảo chỉ bôi cho người có follow!",
+          "verdict": "Đẩy việc nhạy cảm cho thanh niên áo hoa!",
+          "thought": "Thằng Hiếu cũng chẳng tử tế hơn."
+        },
+        {
+          "text": "Bôi luôn, bôi kỹ",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "dung_day"
+            }
+          ],
+          "merit": 1,
+          "karma": 45,
+          "reply": "Sư bôi kỹ hơn cả spa!",
+          "verdict": "Tu sĩ bôi kem cho gái giữa sân chùa. Nghiệp chống nắng không nổi!",
+          "thought": "SPF năm mươi. Nghiệp năm trăm."
+        }
+      ]
+    },
+    {
+      "title": "HIẾU HOA HÒE GẢ QUỲNH",
+      "actor": "hieu_hoa_hoe",
+      "prompt": "Sư ơi chị Quỳnh đang độc thân đó. Em làm mai, sư gật cái là em quay clip đám cưới luôn.",
+      "choices": [
+        {
+          "text": "Lắc đầu niệm kinh",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "niem_kinh"
+            }
+          ],
+          "merit": 5,
+          "karma": 8,
+          "reply": "Sư lắc đầu cũng đẹp trai ghê.",
+          "verdict": "Từ chối mai mối từ thanh niên áo hoa. Vững!",
+          "thought": "Đám cưới sư chắc ăn chay cả mâm."
+        },
+        {
+          "text": "Hỏi chị ấy biết nấu chay không",
+          "steps": [],
+          "merit": 2,
+          "karma": 22,
+          "reply": "Biết! Chị nấu lẩu chay có bò!",
+          "verdict": "Hỏi điều kiện cưới. Tâm đã xiêu!",
+          "thought": "Lẩu chay có bò. Nghe hợp lý lạ."
+        },
+        {
+          "text": "Phang thằng mai mối",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "cam_gay"
+            },
+            {
+              "who": "monk",
+              "do": "dap"
+            },
+            {
+              "who": "actor",
+              "do": "chay_mat"
+            }
+          ],
+          "merit": 1,
+          "karma": 38,
+          "reply": "Áo hoa em rách rồi sư ơi!",
+          "verdict": "Đánh ông mai giữa chùa. Nghiệp có hoa!",
+          "thought": "Mai mối không thành. Áo hoa thành giẻ."
+        }
+      ]
+    },
+    {
+      "title": "CHỊ ONLINE THUÊ QUỲNH LÀM MẪU",
+      "actor": "chi_online",
+      "prompt": "Chị thuê Quỳnh chụp đồ bơi ở sân chùa cho có vibe thanh tịnh. Sư ngồi làm nền nha, càng nghiêm càng bán chạy.",
+      "choices": [
+        {
+          "text": "Dời bồ đoàn ra sau cây",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "dung_day"
+            },
+            {
+              "who": "monk",
+              "do": "ngoi_xuong"
+            }
+          ],
+          "merit": 5,
+          "karma": 8,
+          "reply": "Ơ mất nền rồi! Thôi lấy cây làm nền!",
+          "verdict": "Rút khỏi buổi chụp đồ bơi. Công đức có bóng râm!",
+          "thought": "Cây che được mình. Không che được tiếng bấm máy."
+        },
+        {
+          "text": "Ngồi làm nền nhưng nhắm mắt",
+          "steps": [
+            {
+              "who": "actor",
+              "do": "livestream"
+            }
+          ],
+          "merit": 2,
+          "karma": 22,
+          "reply": "Nghiêm quá! Ba nghìn đơn rồi sư ơi!",
+          "verdict": "Làm nền bán đồ bơi. Nhắm mắt cũng là góp vốn!",
+          "thought": "Không được trả cát xê."
+        },
+        {
+          "text": "Xin chụp chung một kiểu",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "dung_day"
+            },
+            {
+              "who": "actor",
+              "do": "livestream"
+            }
+          ],
+          "merit": 1,
+          "karma": 45,
+          "reply": "Ảnh này lên bìa catalogue luôn!",
+          "verdict": "Sư lên bìa catalogue đồ bơi. Nghiệp in màu!",
+          "thought": "Bìa đẹp. Giới luật in mờ."
+        }
+      ]
+    },
+    {
+      "title": "ĐẠT PHÍT GHEN",
+      "actor": "dat_phit",
+      "prompt": "Sư nhìn người yêu em hả? Quỳnh của em đó! Sư muốn đọ cơ không?",
+      "choices": [
+        {
+          "text": "Bảo sư chỉ nhìn đất",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "niem_kinh"
+            }
+          ],
+          "merit": 6,
+          "karma": 5,
+          "reply": "Đất có gì hay mà nhìn hoài?",
+          "verdict": "Giải oan bằng ánh mắt hướng đất. Thanh minh!",
+          "thought": "Đất hôm nay đẹp thật."
+        },
+        {
+          "text": "Khen Quỳnh hợp với Đạt",
+          "steps": [],
+          "merit": 3,
+          "karma": 15,
+          "reply": "Thật không sư? Em cảm động quá!",
+          "verdict": "Nịnh trai ghen để thoát đòn. Khéo mà gian!",
+          "thought": "Hợp kiểu một tạ đi với một tạ."
+        },
+        {
+          "text": "Nhận đọ cơ luôn",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "dung_day"
+            },
+            {
+              "who": "actor",
+              "do": "nga"
+            }
+          ],
+          "merit": 1,
+          "karma": 40,
+          "reply": "Sư ăn chay mà khỏe vậy!",
+          "verdict": "Đọ sức vì gái giữa sân chùa!",
+          "thought": "Thắng trận. Thua giới."
+        }
+      ]
+    },
+    {
+      "title": "QUỲNH MÚP KHÓC THẤT TÌNH",
+      "actor": "quynh_mup_ghe",
+      "prompt": "Hu hu, Đạt bỏ em đi theo phòng gym rồi. Sư cho em mượn vai khóc một tí thôi.",
+      "choices": [
+        {
+          "text": "Đưa khăn, ngồi xa",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "nem_do_an"
+            }
+          ],
+          "merit": 6,
+          "karma": 5,
+          "reply": "Khăn này mùi nhang thơm ghê.",
+          "verdict": "An ủi người thất tình bằng khăn và khoảng cách. Từ bi chuẩn!",
+          "thought": "Nước mắt ướt khăn. Không ướt áo."
+        },
+        {
+          "text": "Giảng về vô thường",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "niem_kinh"
+            }
+          ],
+          "merit": 4,
+          "karma": 10,
+          "reply": "Vô thường là gì? Có phải là vô tình không?",
+          "verdict": "Giảng đạo cho người đang khóc. Đúng mà khó nghe!",
+          "thought": "Nói vô thường mà nó nghe thành vô tâm."
+        },
+        {
+          "text": "Cho mượn vai luôn",
+          "steps": [
+            {
+              "who": "monk",
+              "do": "dung_day"
+            }
+          ],
+          "merit": 1,
+          "karma": 40,
+          "reply": "Vai sư êm hơn vai Đạt!",
+          "verdict": "Cho gái mượn vai giữa sân chùa. Bờ vai nghiệp chướng!",
+          "thought": "Áo tu ướt một mảng. Khó giải thích."
         }
       ]
     }
