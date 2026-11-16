@@ -19,7 +19,7 @@
       9
     ],
     "stageSize": "Màn cố định càng về sau càng nhiều tình huống: 4, 4, 5, 5, 6.",
-    "randomStagesEnabled": false,
+    "randomStagesEnabled": true,
     "gate": "randomStagesEnabled = false thì chỉ chơi 5 màn cố định, hết màn 5 là đắc đạo chờ level mới. Bật true để mở màn 6 trở đi với kho random.",
     "cleanStages": "5 màn cố định dùng lời lẽ chuẩn mực để qua kiểm duyệt cửa hàng. Nội dung bựa nằm trong randomPool."
   },
